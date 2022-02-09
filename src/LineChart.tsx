@@ -1,74 +1,55 @@
 import React from 'react'
-import { Chart } from 'chart.js'
+import { Line } from 'react-chartjs-2'
 import { useSelector } from 'react-redux'
 import { RootState } from './reducer'
+import { LineChartProps, StateType } from './types'
 
-const LineChart = () => {
-    var randomScalingFactor = function () {
-        return Math.ceil(Math.random() * 10.0) * Math.pow(10, Math.ceil(Math.random() * 5));
-    };
-    // What should X-axis be?
-    var config = {
-        type: 'line',
-        data: {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-            datasets: [{
-                label: 'a',
-                backgroundColor: 'red',
-                borderColor: 'red',
+const LineChart = (props: LineChartProps) => {
+    const { time, title, dataset1, dataset2, label1, label2 } = props;
+    const state = useSelector<RootState, StateType>(state => state.reducer)
+    const data = {
+        labels: [...time],
+        datasets: [
+            {
+                label: label1,
                 fill: false,
-                data: [
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor()
-                ],
-            }, {
-                label: 'b',
-                backgroundColor: 'blue',
-                borderColor: 'blue',
-                fill: false,
-                data: [
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor()
-                ],
-            }]
-        },
-        options: {
-            responsive: true,
-            title: {
-                display: true,
-                text: 'BNBBTC Line Chart'
+                lineTension: 0,
+                backgroundColor: '#04AA40',
+                borderColor: '#04AA40',
+                borderWidth: 2,
+                data: [...dataset1]
             },
-            scales: {
-                xAxes: [{
-                    display: true,
-                }],
-                yAxes: [{
-                    display: true,
-                    type: 'logarithmic',
-                }]
+            {
+                label: label2,
+                fill: false,
+                lineTension: 0,
+                backgroundColor: '#E80C3A',
+                borderColor: '#E80C3A',
+                borderWidth: 2,
+                data: [...dataset2]
             }
-        }
-    };
-    
-    window.onload = function() {
-        const canvas = document.getElementById('canvas') as HTMLCanvasElement;
-        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-		new Chart(ctx, config);
-	};
-
+        ]
+    }
     return (
-        <div style={{ width: '75%' }}>
-            <canvas id="canvas"></canvas>
+        <div>
+            <Line
+                data={data}
+                options={{
+                    title: {
+                        display: true,
+                        text: title,
+                        fontColor: '#ddd',
+                        fontSize: 16
+                    },
+                    legend: {
+                        display: true,
+                        position: 'right',
+                        labels: {
+                            fontColor: '#fff'
+                        },
+                    },
+                }}
+            />
         </div>
     )
 }
